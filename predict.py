@@ -21,7 +21,7 @@ def preprocess_texts(raw_texts, replacements):
 def make_formatted_predictions(clf, texts):
     predictions = []
     for t in texts:
-        labels, probs = clf.predict(t, k=5, threshold=0.1)
+        labels, probs = clf.predict(t, k=1, threshold=0.1)
         result_line = ''
         # print(f'labels:{labels}')
         # print(f'probs:{probs}')
@@ -36,7 +36,7 @@ def make_formatted_predictions(clf, texts):
 
 datapath = '.'
 print('loading cases for prediction...')
-texts_test = pd.read_csv(os.path.join(datapath, 'cases.txt'), header=None)
+texts_test = pd.read_excel(os.path.join(datapath, 'cases2predict.xlsx'), header=None)
 print('loading preprocessing configuration...')
 podmiany = pd.read_excel(os.path.join(datapath, 'preproc_dict.xlsx'))
 print('preprocessing...')
@@ -45,6 +45,6 @@ print('loading model...')
 classifier = fastText.load_model(os.path.join(datapath, 'model'))
 print('predicting labels...')
 result = make_formatted_predictions(classifier, test_set.values)
-print('saving model...')
+print('saving predictions...')
 pd.Series(result).to_csv(os.path.join(datapath, 'predictions.csv'), index=False)
 print('Done! Please find results in predictions.csv')
